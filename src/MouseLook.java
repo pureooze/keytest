@@ -16,7 +16,7 @@ public class MouseLook extends coreDisplay implements MouseMotionListener, KeyLi
     
 	public static void main(String[] args) {
 		
-		new Look().run();
+		new MouseLook().run();
 	}
 	
 	//init
@@ -69,4 +69,59 @@ public class MouseLook extends coreDisplay implements MouseMotionListener, KeyLi
 		g.drawImage(bg, x - w, y - h, null);
 	}
     
+	//recenter mouse with R.O.B.O.T.
+	private synchronized void recenterMouse(){
+		
+		Window w = screen.getFullScreenWindow();
+		
+		if(robot != null && w.isShowing()){
+			centerLoc.x = w.getWidth() /2;
+			centerLoc.y = w.getHeight() /2;
+			SwingUtilities.convertPointToScreen(centerLoc, w);
+			centering = true;
+			robot.mouseMove(centerLoc.x, centerLoc.y);
+		}
+	}
+	
+	//mouse motion listener methods
+	public void mouseDragged(MouseEvent e){
+		mouseMoved(e);
+	}
+	
+	public synchronized void mouseMoved(MouseEvent e){
+		
+		if(centering && centerLoc.x == e.getX() && centerLoc.y == e.getY()){
+			centering = false;
+		}else{
+			int dx = e.getX() - mouseLoc.x;
+			int dy = e.getY() - mouseLoc.y;
+			
+			imageLoc.x += dx;
+			imageLoc.y += dy;
+			recenterMouse();
+		}
+		
+		mouseLoc.x = e.getX();
+		mouseLoc.y = e.getY();
+	}
+	
+	//key listener interface
+	public void keyPressed(KeyEvent e){
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+			stop();
+		}
+	}
+	
+	public void keyReleased(KeyEvent e){}
+	public void keyTyped(KeyEvent e){}
 }
+
+
+
+
+
+
+
+
+
+
