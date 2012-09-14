@@ -3,6 +3,11 @@ import java.awt.*;
 public abstract class coreDisplay {
 
     private static DisplayMode modes[] = {
+    	
+    	new DisplayMode(1920, 1080, 32, 0),
+        new DisplayMode(1920, 1080, 24, 0),
+        new DisplayMode(1920, 1080, 16, 0),
+        
         new DisplayMode(800, 600, 32, 0),
         new DisplayMode(800, 600, 24, 0),
         new DisplayMode(800, 600, 16, 0),
