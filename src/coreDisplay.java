@@ -1,88 +1,77 @@
 import java.awt.*;
-import javax.swing.*;
 
 public abstract class coreDisplay {
 
-	private static DisplayMode modes[] = {
-		
-		new DisplayMode(1920, 1080, 32, 0),
-		new DisplayMode(1920, 1080, 24, 0),
-		new DisplayMode(1920, 1080, 16, 0),
-		
-		new DisplayMode(800, 600, 32, 0),
-		new DisplayMode(800, 600, 24, 0),
-		new DisplayMode(800, 600, 16, 0),
-		
-		new DisplayMode(640, 480, 32, 0),
-		new DisplayMode(640, 480, 24, 0),
-		new DisplayMode(640, 480, 16, 0),
-	};
-	
-	private     boolean          running;
-	protected   screenManager    screen;
-	
-	//stop method
-	public void stop(){
-		running = false;
-	}
-	
-	//call init and gameloop
-	public void run(){
-		try{
-			init();
-			gameLoop();
-		}finally{
-			screen.restoreScreen();
-		}
-	}
-	
-	//initializes full screen mode
-	public void init(){
-		
-		DisplayMode     dm         = screen.findFirstCompatibleMode(modes);
-		Window          window     = screen.getFullScreenWindow();
-		                screen     = new screenManager();
-		
-		screen.setFullScreen(dm);
-		window.setFont(new Font("Calibri", Font.PLAIN, 20));
-		window.setBackground(Color.GREEN);
-		window.setForeground(Color.WHITE);
-		running = true;
-	}
-	
-	//main gameloop
-	public void gameLoop(){
-		
-		long     startTime     = System.currentTimeMillis();
-		long     cummlTime     = startTime;
-		
-		while(running){
-			long timePassed = System.currentTimeMillis() - cummlTime;
-			cummlTime += timePassed;
-			
-			update(timePassed);
-			Graphics2D g = screen.getGraphics();
-			draw(g);
-			g.dispose();
-			screen.update();
-			
-			try{
-				Thread.sleep(20);
-			}catch(Exception ex){
-				//nothing
-			}
-		}
-	}
-	
-	//update animation
-	public void update(long timePassed){
-		//empty function, filled in on per case basis in main program
-	}
-	
-	//draw to screen
-	public abstract void draw(Graphics2D g);
-	
+    private static DisplayMode modes[] = {
+        new DisplayMode(800, 600, 32, 0),
+        new DisplayMode(800, 600, 24, 0),
+        new DisplayMode(800, 600, 16, 0),
+
+        new DisplayMode(640, 480, 32, 0),
+        new DisplayMode(640, 480, 24, 0),
+        new DisplayMode(640, 480, 16, 0),
+    };
+
+    private boolean running;
+    protected screenManager screen;
+
+    //Stop method
+    public void stop() {
+        running = false;
+    }
+
+    //call init and gameloop
+    public void run() {
+        try {
+            init();
+            gameloop();
+        } finally {
+        	screen.restoreScreen();
+        }
+    }
+
+    //set to full screen
+    public void init() {
+    	screen = new screenManager();
+        DisplayMode dm = screen.findFirstCompatibleMode(modes);
+        screen.setFullScreen(dm);
+
+        Window w = screen.getFullScreenWindow();
+        w.setFont(new Font("Arial", Font.PLAIN, 20));
+        w.setBackground(Color.GREEN);
+        w.setForeground(Color.WHITE);
+        running = true;
+    }
+
+    //main game loop
+    public void gameloop() {
+        long startTime = System.currentTimeMillis();
+        long cumTime = startTime;
+
+        while (running) {
+            long timePassed = System.currentTimeMillis() - cumTime;
+            cumTime += timePassed;
+
+            update(timePassed);
+            Graphics2D g = screen.getGraphics();
+            draw(g);
+            g.dispose();
+            screen.update();
+
+            try {
+                Thread.sleep(20);
+            } catch (Exception ex) {
+                System.err.println("Error when trying to sleep: " + ex);
+            }
+        }
+    }
+
+    //update animation
+    public void update(long timePassed) {
+        //empty//
+    }
+
+    //draws to the screen
+    public abstract void draw(Graphics2D g);
+
 }
-
-
-
